@@ -1,0 +1,84 @@
+﻿
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Examen </h2>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <div class="col-12 col-sm-12 col-md-5 col-lg-5">
+                        <div class="form-group">
+                            <label for="Nombre">Nombre</label><span class="font-weight-bold text-red">*</span>
+                            <input type="text" class="validate form-control" id="Nombre"  />
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-5 col-xl-5">
+                        <div class="form-group">
+                            <label for="Descripción">Descripción</label><span class="font-weight-bold text-red">*</span>
+                            <input type="text" class="validate form-control" id="Descripcion" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2">
+                        <br />
+                        <button class="btn btn-success btnGuardar" type="button" data-ajax="true" id="btnGuardar">
+                            <i class="mdi mdi-content-save"></i> Guardar
+                        </button>
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 50px !important">
+        <span>Lista</span>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div id="contentTabla" class="mb-12">
+            @Html.Action("_TablaExamen", "Examen")
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+            var examen = new Object();
+
+            $("#btnGuardar").click(function () {
+
+                examen.Nombre = $("#Nombre").val();
+                examen.Descripcion = $("#Descripcion").val();
+
+                $("#btnGuardar").prop('disabled', true);
+                $.ajax({
+                    url: '@Url.Action("save", "Examen")',
+                    type: "POST",
+                    cache: false,
+                    data: { examen: examen },
+                    success: function (response) {
+                        CargarTabla();
+                        $("#btnGuardar").prop('disabled', false);
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                    }
+                });
+            });
+
+        CargarTabla();
+            function CargarTabla() {
+                var url = '@Url.Action("_TablaExamen", "Examen")';
+                $("#contentTabla").load(url);
+                $("#Descripcion").val("");
+                $("#Nombre").val("");
+
+            }
+    </script>
+}
+
+
